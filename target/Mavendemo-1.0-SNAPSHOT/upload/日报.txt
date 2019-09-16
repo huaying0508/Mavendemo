@@ -1,0 +1,663 @@
+2019.08.19
+
+课题：项目评审
+
+内容：
+
+1、jsp的九大内置对象：
+out、session、request、response、page、application、pagecontext、config、exception
+
+2、事务以及特性
+1）、什么是事务：数据库所做的一切操作，都叫事务。
+2）、事务的四大特性：原子性（Atomicity），持久性（Durability），隔离性（Isolation）、一致性(Correspondece)
+
+3、jsp的本质：
+jsp本质是简化的Servlet，当jsp首次被访问时，tomcat会先将它转译为java代码，然后在编译成为class文件，class文件内容与servlet的一样，所以jsp的本质是一个servlet
+
+4、jquery的选择器
+id选择器，类选择器、元素选择器、全选择器、层次选择器、复合选择器、过滤选择器、属性选择器、表单选择器、子类选择器、··········
+
+5、什么是jstl，如何使用
+1）、定义：Java Server Pages 标准标签库 (JSTL) 包含的各种标签可用于 JSP 页面中。是对EL表达式的一种拓展
+2）、如何引用：导入相应的jar包，在使用标签的jsp页面中使用taglib指令导入标签库；导入的指令为：<%@ taglib prefix="c"uri="http://java.sun.com/jstl/core" %>
+
+6、get和post的区别
+1）、get重点在从服务器上获取资源，post重点在向服务器发送数据；
+2）、get传输数据是通过URL请求，以field（字段）= value的形式，置于URL后，并用"?"连接，多个请求数据间用"&"连接，如http://127.0.0.1/Test/login.action?name=admin&password=admin，这个过程用户是可见的；post传输数据通过Http的post机制，将字段与对应值封存在请求实体中发送给服务器，这个过程对用户是不可见的；
+3）、Get传输的数据量小，因为受URL长度限制，但效率较高；Post可以传输大量数据，所以上传文件时只能用Post方式；
+4）、get是不安全的，因为URL是可见的，可能会泄露私密信息，如密码等；post较get安全性较高；
+5）、get方式只能支持ASCII字符，向服务器传的中文字符可能会乱码。post支持标准字符集，可以正确传递中文字符。 
+
+7、c3p0对数据库的优化体现在哪里
+1）、扩展了传统的jdbc连接方法
+2、、创建了多个的连接对象，供用户连接，而不用连接一个，另一个要连接时要断开连接，减少了服务器的压力
+3）、使用数据库连接池会显著提高整个应用程序的伸缩性（大大提高了连接数量）和健壮性（能够应对大量用户频繁连接数据库，减少系统资源的消耗），提高应用程序的性能指标
+4）、连接数量是由最小数据库连接数制约，无论数据库连接是否被使用，连接池都将一直保证至少有这么多的连接数量
+
+8、cookie和session的区别
+1）、Cookie存储在浏览器中，而session存储在服务端
+2）、cookie的存储限制了数据量，只允许4KB，而session是无限量的
+
+9、jsp的四大作用域以及作用范围
+1、page：作用范围是整个jsp页面，生命周期是从请求开始到响应结束
+2、request：作用范围是整个请求链（只要有请求转发就一直存在），生命周期是在service方法调用前创建，请求结束后在destroy方法销毁结束
+3、session：作用范围是整个项目，生命周期在第一次使用getsession()时创建，超过30min或者退出或者调用invalidate()方法或者强制关闭时销毁
+4、application：作用范围是整个项目，生命周期是从服务器启动时创建，关闭时结束
+
+10、session什么时候被创建
+用户登录时创建session
+用户退出或者关闭浏览器时销毁session或者session超过半小时
+
+11、前后台跳转的方法
+1）、前台—》后台：
+（1）、表单提交：<form action="路径">
+（2）、a标签跳转：<a href="路径">
+（3）、javascript:location.href="路径"
+2）、后台—》前台：
+（1）、request的请求转发
+（2）、response的重定向
+（3）、打印流和javascript的结合转发
+
+12、ajax的使用
+ajax一般用于与服务器进行数据库交换，可以局部刷新数据，不用重新加载整个界面，提高了体验感
+
+13、原生ajax
+
+xmlhttp = null;
+//判断浏览器内核引擎/版本
+if (window.XMLHttpRequest) {
+xmlhttp = new XMLHttpRequest();	
+} else if (window.ActiveXObject) {			
+xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");}		
+//编写回调函数		
+xmlhttp.onreadystatechange = function() {				
+if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {				
+alert(xmlhttp.responseText)}	}		
+//open设置请求方式和请求路径		
+xmlhttp.open("post", "/Ajax/ajax2");
+//一个servlet，后面还可以写是否同步		
+//设置请求头		
+xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded")		
+//send 发送		
+xmlhttp.send("username=张三");
+
+---------------------------------------------------------------------------------------------------------------------------
+
+2019.08.22
+内容：
+
+1、安装新工具：idea和mysql
+
+2、介绍了框架的大致原理
+
+3、对三阶的技术总结
+
+4、同步请求：
+1）、form的表单submit提交
+2）、超链接a标签的href="";
+3）、JavaScript的location.href="";
+5、异步请求（ajax）：
+1）、常用参数：
+（a）、url 请求地址
+（b）、type 请求方式，默认是'get'，常用的还有'post'
+（c）、dataType 设置返回的数据格式，常用的是'json'格式，也可以设置为'text'
+（d）、data 设置发送给服务器的数据
+（e）、success 设置请求成功后的回调函数
+（f）、error 设置请求失败后的回调函数
+（g）、async 设置是否异步，默认值是'true'
+
+2）、ajax的作用：Ajax与服务器进行数据交换，可以局部更新网页内容。这意味着不需要加载整个界面，提高用户体验。
+3）、ajax的用途：（1）、注册验证用户名是否存在；（2）、省市区的级联效果；（3）、登录失败不用跳转页面······
+
+4）、原生ajax
+
+xmlhttp = null;
+//判断浏览器内核引擎/版本
+if (window.XMLHttpRequest) {
+xmlhttp = new XMLHttpRequest();	
+} else if (window.ActiveXObject) {			
+xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");}		
+//编写回调函数		
+xmlhttp.onreadystatechange = function() {				
+if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {				
+alert(xmlhttp.responseText)}	}		
+//open设置请求方式和请求路径		
+xmlhttp.open("post", "/Ajax/ajax2");
+//一个servlet，后面还可以写是否同步		
+//设置请求头		
+xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded")		
+//send 发送		
+xmlhttp.send("username=张三");
+
+心得体会：layui和bootstrap框架刚接触用的不太习惯，希望能尽快适应和学会使用新工具，不懂得要多问
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+2019.08.22
+
+内容：
+
+1、安装mysql
+2、安装Navicat
+
+问题：
+1、控制台乱码
+2、Navicat连接mysql出现问题
+
+解决方案：
+1、百度，在idea.exe.vmoptions和idea64.exe.vmoptions添加-Dfile.encoding=UTF-8、
+-Dconsole.encoding=UTF-8
+2、配置问题
+
+心得：对心得模板用的不是很熟，要努力适应
+
+
+-----------------------------------------------------------------------------------------
+
+2019.08.27
+课题：Action原理和result处理
+内容：
+
+一、struts2的六大核心组件
+1、FC：前端控制器（Filter Controller），请求收发
+2、action：业务处理
+3、valuestack：值栈，用于存储数据
+4、interceptor：拦截器
+5、result：负责输出
+6、tags:标签，负责显示数据，比较不常见
+
+二、result的部分用法
+
+1、转发到jsp：dispatcher
+
+<result name="success" type="dispatcher">要转发的路径</result>
+
+2、重定向到jsp：redirect
+
+<result name="success" type="redirect">要重定向到jsp的路径</result>
+
+
+3、重定向到Action：redirectAction
+
+3.1、重定向到另一个个action里，不在同一个namespace
+<result name=”login” type=”redirectAction”> 
+<param name=”namespace”>/命名空间</param> 
+<param name=”actionName”>action名</param> 
+<param name=”method”>方法名</param> </result>
+
+3.2、重定向到在同一个namespace下的action
+<result name=”login” type=”redirectAction”> action名 </result>
+
+4、ajax异步(json)：json
+<result name="success” type=”json”>    
+<param name=”root”>属性名</param> </result>
+
+5、流：stream
+ <result name=”success” type=”stream”>    
+<param name=”inputName”>codeStream</param> </result>
+其中root是固定写法，属性名是Action内的属性
+
+6、action之间的跳转：chain
+
+<result name=”login” type=”chain”> 
+<param name=”namespace”>/命名空间</param> 
+<param name=”actionName”>action名</param> 
+<param name=”method”>方法名</param> </result>
+
+
+问题：
+
+路径写的都没错，就是获取不到路径
+
+解决方法：
+
+未解决，明天问一下遇见这种bug并解决的大佬
+
+心得：
+
+代码量少了，bug多了
+
+
+----------------------------------------------------------------------------------
+
+2019.08.28
+课题：struts2 数据展现 
+内容：
+一、OGNL
+1、作用
+1）、展示数据
+2）、数据运算
+3）、获取数据
+4）、简化代码
+2、引入标签库：在jsp表头添加<%@ taglib  prefix="s" uri="/struts-tags"%>
+
+3、6个常用的表达式
+1）、获取list的某个数据：<s:property value="属性名[index]"/>
+2）、获取map的某个值：<s:property value="属性名.KEY"/>
+3）、访问实体对象：：<s:property value="对象名.属性名"/> 
+4）、获取某个方法的返回值：<s:property value="OGNL.方法"/> 
+5）、数据运算<s:property value="OGNL和运算"/> 
+6）、不访问Action的数据，临时创建一个list或map：<s:property value="OGNL"/>
+
+5、迭代集合
+1）、按数据迭代
+ <s:iterator value="users"> 
+ <s:property value="userName"/>
+</s:iterator>
+
+2）、按数字迭代
+ <s:iterator begin="from" end="to" var="k"> 
+ <s:property value="k"/> 
+</s:iterator>
+
+二、值栈
+ Action向页面传递数据的媒介，每次访问action的时候都会创建action对象
+
+三、UI标签
+
+1、复选框：<s:checkboxlist name="alllist" list="checklist" listKey="id" listValue="value">
+2、下拉列表：<s:select list="集合名" listValue="集合内属性对应显示部分" listKey="对应值" name="select名称" id="selectid" ></s:select> 
+3、表单：<s:form action="" method="" theme="simple"> </s:form>
+4、输入框: <s:textfield name="OGNL" />
+5、密码框: <s:password name="OGNL" /> 
+6、submit按钮： <s:submit value="保存" /> 
+7、文本域： <s:textarea name="OGNL" /> 
+8、单选按钮：<s:radio name=“获取的总数据" list="选中的数据" listey="实体字段编号" listValue="实体字段名"/>
+
+心得体会：使用sysem.out.println输出前台获取的user.getUsername是乱码，插入数据库后又变正常了，真是搞不懂
+
+
+-------------------------------------------------------------------------------------------------------------
+
+
+2019.08.29
+
+课题：struts2 拦截处理
+
+内容：
+
+一、拦截器用途：
+1、适合封装一些通用处理,便于重复利用
+2、请求参数传递给Action属性,日志的记录,权限检查, 事务 处理等。
+3、采用AOP编程思想，便于后期维护和扩展
+
+二、拦截器的使用
+1、创建拦截器组件：创建一个类，实现Interceptor接口，并实现intercepte方法
+ public String interceptor(ActionInvocation invocation) { 
+ //拦截器--前部分处理 
+invocation.invoke(); 
+//执行action和result 
+ //拦截器--后续处理 
+ }
+
+2、注册拦截器：在struts.xml中，注册拦截器，必须在<package></package>里面创建
+ <package> 
+ <interceptors> 
+ <interceptor name="别名" class="实现类"/> 
+//...定义其他interceptor或拦截器栈
+ </interceptors> 
+ </package>
+
+3、引用拦截器：如果哪个Action希望被拦截器扩展，需要在此action配置下，引用拦截器
+ <action> 
+<interceptor-ref name="拦截器"/>
+//...可以写多个
+ </action>
+
+三、拦截器栈
+ 往往一个Action需要引用很多个拦截器，那么可以将这些拦截 器打包成栈，直接引用这个栈即可，这样可以简化对拦截器的 引用。拦截器栈仅仅是对拦截器的打包，方便引用，它在使用上完全 等同于拦截器。
+<interceptor-stack name="myStack"> 
+<interceptor-ref name="firstInterceptor"/> 
+<interceptor-ref name="secondInterceptor"/> 
+</interceptor-stack>
+
+四、文件上传
+1.form表单中添加属性：multipart/form-data
+2、配置struts.xml文件
+<action>
+  <interceptor-ref name="defaultStack">
+ <param name="fileUpload.maximumSize">设置上传文件大小</param>
+  <param name="fileUpload.allowedTypes">设置文件的类型</param>
+ <param name="fileUpload.allowedExtensions">设置文件的后缀名</param>
+ </interceptor-ref>
+</action>
+
+3、在创建的action类里面定义文件属性
+4、通过工具包移动文件
+
+问题：
+用异步上传文件，业务实体类中获取不到前台文件信息，导致文件无法传输，但是用同步的话又可以成功上传文件。
+
+解决方法：暂无
+
+心得：
+案例进度完成较慢，希望在周末的时候可以将剩下的功能补上
+
+
+-------------------------------------------------------------------------------------------
+
+2019.09.03
+
+课题：ORM映射原理
+
+内容：
+
+一、反射机制
+
+1、定义：动态获取类的信息以及动态调用对象的方法的功能
+
+2、功能/作用
+1）、在运行时判断任意一个对象所属的(父)类。
+2）、在运行时构造任意一个类的对象，也就是实例化对象
+3）、在运行时判断任意一个类所具有的成员变量和方法。
+4）、在运行时调用任意一个对象的方法
+
+3、使用反射机制获取Class的方式
+1）、Class.forName("java.lang.String"); 
+2）、使用类的.class语法；abc.class
+3）、使用对象的getClass()方法。：String str = "aa"; Class<?> classType1 = str.getClass();  ? 
+
+二、ORM对象关系映射
+
+1、目的：方便开发人员以面向对象的思想来实现对数据库的操作
+
+2、实现原理
+1）、映射类（*.java）：它的作用是描述数据库表的结构，表中的字段在类中被描述成属性，将来就可以实现把表中的记录映射成为该类的对象。简单来说就是创建一个实体类，名字，字段，属性与数据库一样，但是不区分大小写
+2）、映射文件（*.xml）：指定数据库表和映射类之间的关系
+3）、数据库配置文件（*.properties或*.xml）：与数据库连接时需要的连接信息
+
+心得：反射机制还有些地方懵懂，尚未应用到项目中使用，要努力理解，并使用它
+
+---------------------------------------------------------------------------------------------------------------
+
+2019.09.03
+
+课题：MyBatis基础
+
+内容：
+
+一、mybatis的概述：
+
+myBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层框架；封装了大部分的jdbc代码，只需要将所要操作的sql填写在相应的位置，无需关注数据库连接驱动，创建连接等问题
+
+
+二、mybatis相对于jdbc的优势
+
+1、减少了62%的代码量 
+2、最简单的持久化框架 
+3、架构级性能增强 
+4、SQL代码从程序代码中彻底分离，可重用 
+5、增强了项目中的分工 
+6、增强了移植性 
+
+三、mybatis的连接数据库步骤
+
+1、创建SqlMapConfig.xml，配置驱动，连接，用户名，密码和mapper下的xml资源
+2、创建MybatisUtil工具类，用于获取SqlSession
+3、在数据库建立一张表
+4、创建一个实体类，类名，数据类型，字段名与数据库表一致
+5、在mapper下创建一个xml文件，内部可选增删改查方法（insert、delete、selectOne、update、selectList）选择你要的方法，写下相应的sql语句
+6、编写一个测试类，使用junit方法测试效果
+
+心得：mybatis还蛮好用的，就是要多研究一下原理和相应的操作，代码也简化了不少
+
+------------------------------------------------------------------------------------------------------------------
+
+2019.09.04
+
+课题：Mapper映射与动态SQL
+
+内容：
+
+一、Mapper映射的具体步骤
+
+1、首先根据Mapper映射编写一个Mapper接口，接口方法名和mapper.xml里的增删改查的ID属性保持一致。
+2、、再利用SqlSession提供的getMapper(..)方法，会自动返回一个 Mapper接口实例。YYY是数据库连接类，XXX是Mapper接口类
+SqlSession session=YYY.getSession;
+XXX mapper = session.getMapper(XXX.class);
+mapper.接口方法名
+
+二、动态SQL
+
+1、foreach
+1）、批量查询
+<select>  
+ select 字段 from 表 where 字段 in   
+<foreach collection="list" item="u" open="(" separator="," close=")">
+#{u}   
+</foreah> </select>
+
+2）、批量增加
+<select>  
+ insert into 表 (字段1,字段2,·····，字段n)
+<foreach collection="list" item="u" open="(" separator="," close=")">
+#{u.字段1,u.字段2,·······,u.字段n}   
+</foreah> </select>
+
+2、set
+<update>
+　　　　update 表 
+　　　　<set>
+　　　　　　<if test="字段1 != null and 字段1.length()>0">字段1 = #{字段1},</if>
+　　　　　　<if test="字段2 != null and 字段2.length()>0">字段2 = #{字段2},</if>
+　　　　</set>
+　　　　where id = #{id}
+　　</update>
+
+3、where
+
+select * from 表
+    <where>
+        <if test="字段1 != null and 字段1 != ''">
+            AND 字段1 = #{字段1}
+        </if>
+
+        <if test="字段2 != null and 字段2 != ''">
+            AND 字段2 = #{字段2}
+        </if>
+    </where>
+</select>
+
+4、if
+
+<if test="字段1 !=(neq) null and 字段1 != ''"></if>
+
+
+三、mybatis的工作原理
+
+
+心得：每天进步一点点
+
+
+-----------------------------------------------------------------------------------------------------------
+
+2019.09.05
+
+课题：MyBatis关联映射
+
+内容：
+
+一、主键映射
+
+1、自动增长(mysql)
+ 在<insert>的尖括号里面添加keyProperty="主键字段(自动增长列)" useGeneratedKeys=“true” 
+
+2、非自动增长(oracle)
+ 在<insert></insert>里面加上<selectKey keyProperty="主键字段(自动增长列)" order="BEFORE" resultType="java.lang.Integer"> select 序列.nextval from 表 </selectkey>
+
+二、关联映射(一对一)
+
+1、嵌套查询：通过执行另外一个SQL映射语句来返回关联数据结果（查2次）
+
+<select id="findById" parameterType="java.lang.Integer" resultMap= "map变量名">
+   select * from 表1 where 表主键=#{id} </select>
+
+<select id="查询的id名" parameterType="java.lang.Integer" resultType="表2实体类路径"> 
+  select * from 表2 where 主键字段=#{id} </select>
+
+<resultMap type="表1实体类路径" id="map变量名"> 
+<id property="表1实体类主键字段" column="表1字段"></id>//表1的主键
+<result property="表1实体类字段" column="表1字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表1实体类字段" column="表1字段"></result>
+
+//关联表
+  <association property="表1实体类里定义的表2实体类的变量名" column="表2主键字段" javaType="表2实体类路径" select="查询的id名"> 
+<id property="表2实体类主键字段" column="表2主键"></id>//表1的主键
+<result property="表2实体类字段" column="表2字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表2实体类字段" column="表2字段"></result>
+  </association>
+ </resultMap>
+
+
+
+2、嵌套结果：执行一个表关联SQL查询，将结果映射成关联对象（查1次）
+
+<select id="findById" parameterType="java.lang.Integer" resultMap= "Map变量名"> 
+   select e.empno,e.ename,e.job,e.mgr,e.sal,e.comm,e.hiredate,e.deptno, d.dname,d.loc from EMP e join DEPT d on(d.deptno=e.deptno) where e.EMPNO=#{id} </select>
+
+<resultMap type="表1实体类路径" id="Map变量名">
+ <id property="表1实体类主键字段" column="表1主键"></id>//表1的主键
+<result property="表1实体类字段" column="表1字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表1实体类字段" column="表1字段"></result>
+  
+//关联表
+<association property="表1实体类里定义的表2实体类的变量名" column="表2主键字段" javaType="表2实体类路径">
+  <id property="表2实体类主键字段" column="表2主键"></id>//表1的主键
+<result property="表2实体类字段" column="表2字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表2实体类字段" column="表2字段"></result>   
+</association> 
+·····
+
+</resultMap>
+
+
+三、集合映射(一对多)
+
+1、嵌套查询：通过执行另外一个SQL映射语句来返回关联数据结果（查2次）
+
+<select id="findById" parameterType="java.lang.Integer" resultMap= "map变量名">
+   select * from 表1 where 表主键=#{id} </select>
+
+<select id="查询的id名" parameterType="java.lang.Integer" resultType="表2实体类路径"> 
+  select * from 表2 where 主键字段=#{id} </select>
+
+ <resultMap type="表1实体类字段" id="map变量名">
+  <id property="表1实体类主键字段" column="表1主键"></id>//表1的主键
+<result property="表1实体类字段" column="表1字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表1实体类字段" column="表1字段"></result>
+
+   <collection property="表1实体类里定义的表2实体类的变量名" ofType="表2实体类路径" javaType="java.util.ArrayList" column="表2主键" select="查询的id名">
+   </collection>
+ </resultMap>
+
+2、嵌套结果：执行一个表关联SQL查询，将结果映射成关联对象（查1次）
+
+<select id="findById" parameterType="java.lang.Integer" resultMap= "deptEmpsResult"> 
+   select d.表1字段,d.表1字段,d.表1字段，e.表2字段,e.表2字段,e.表2字段 from 表2 e join 表1 d on(d.表2字段=e.表2主键)  where d.deptno = #{deptno} 
+</select>
+
+<resultMap type="表1实体类路径" id="Map变量名">
+ <id property="表1实体类主键字段" column="表1主键"></id>//表1的主键
+<result property="表1实体类字段" column="表1字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表1实体类字段" column="表1字段"></result>
+
+   <collection property="表1实体类里定义的表2实体类的变量名" ofType="表2实体类路径">
+      <id property="表2实体类主键字段" column="表2主键"></id>//表1的主键
+<result property="表2实体类字段" column="表2字段"></result>//表1的字段名（除主键外）
+·····
+<result property="表2实体类字段" column="表2字段"></result>   
+
+</collection>
+ </resultMap> 
+
+
+问题：数据库死锁问题(Lock wait timeout exceeded; try restarting transaction)
+
+解决方案：暂无
+
+心得体会：不是很熟，需要多练
+
+
+--------------------------------------------------------------------------------------------
+
+2019.09.09
+
+内容：
+
+一、AOP
+1、什么是AOP：AOP是面向切面编程，可以看成是对面向对象编程（oop）的补充和完善。它将一些与业务无关，都要做的的行为封装起来，减少重复代码，降低模块的耦合度，便于后期的维护。
+
+2、AOP核心概念
+1）、通知：相当于一件事情发生的时间和发生的事件
+2）、切入点：相当于一件事情发生的地点
+3）、切面：通知+切入点=切面
+4）、目标：相当于一件事情中的人物甲
+5）、代理：相当于一件事情发生，有人物乙转述出去，代理相当于人物乙
+6）、织入：将切面应用到目标对象并导致代理对象创建的过程
+
+3、AOP增强的分类
+1）、前置增强：在执行方法前实施增强
+2）、后置增强：在执行方法后实施增强
+3）、环绕增强：在目标方法执行前后同时实施增强 
+4）、异常抛出增强：在目标方法抛出异常后来实施增强
+5）、最终增强：在无论如何都要执行的此方法
+
+4、AOP增强的顺序
+1）、before前置增强
+2）、Around环绕增强
+3）、AfterReturning后置增强
+4）、After最终增强
+5）、@AfterThrowing异常增强
+注意：执行顺序是从上向下， AfterThrowing和around不能同时出现，同时出现时 AfterThrowing失效。
+
+5、四种实现AOP的方法
+1）、基于代理的AOP
+2）、纯简单java对象
+3）、@Aspect注解形式
+4）、注入形式的Aspcet切面
+
+心得：内容比较抽象，需要自己多去理解，多去百度
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

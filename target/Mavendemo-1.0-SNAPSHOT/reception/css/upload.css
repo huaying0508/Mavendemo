@@ -1,0 +1,10 @@
+/* CSS Document */
+
+td{
+	padding: 10px;
+}
+th{
+	font-size:15px;
+	padding-left: 10px;
+	padding-right: 10px;
+}

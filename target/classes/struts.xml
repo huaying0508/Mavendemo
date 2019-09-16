@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+        "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+
+    <!--==================================后===台=================================-->
+
+    <!--ajax登录-->
+    <package name="test" namespace="/test" extends="struts-default,json-default">
+
+        <action name="login" class="admLoginAction">
+            <result name="rejson" type="json">
+                <param name="root">remap</param>
+            </result>
+
+            <!--检测用户名-->
+            <result name="checkN" type="json">
+                <param name="root">recheck</param>
+            </result>
+
+            <!-- 增加用户-->
+            <result name="addu" type="chain">
+                <param name="namespace">/user</param>
+                <param name="actionName">UserM</param>
+                <param name="method">findByUser</param>
+            </result>
+            <result name="addfail">admin/AddUser.jsp</result>
+
+            <interceptor-ref name="defaultStack">
+                <param name="fileUpload.maximumSize">10240000</param>
+                <param name="fileUpload.allowedTypes">text/plain,image/jpeg,image/png</param>
+                <param name="fileUpload.allowedExtensions">.txt,.jpg,.jpeg,.png</param>
+            </interceptor-ref>
+
+        </action>
+    </package>
+
+    <!--增删改查-->
+    <package name="user" namespace="/user" extends="struts-default">
+
+        <interceptors>
+            <interceptor name="LoginInterce" class="com.soft.interceptor.LoginInterceptor"></interceptor>
+            <interceptor-stack name="myStack">
+                <interceptor-ref name="LoginInterce"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="myStack"></default-interceptor-ref>
+        <global-results>
+            <result name="error">/admin/login.jsp</result>
+        </global-results>
+
+
+        <!--查找-->
+        <action name="UserM" class="userListAction" method="findByUser">
+            <result name="findok">/admin/findUser.jsp</result>
+            <result name="fail">/admin/error.jsp</result>
+
+        </action>
+
+        <!-- 审核通过-->
+        <action name="expass" class="userListAction">
+            <result name="examine" type="chain">UserM</result>
+            <result name="noexam">/admin/error.jsp</result>
+
+        </action>
+
+        <!-- 审核不通过-->
+        <action name="exapass" class="userListAction">
+            <result name="exam" type="chain">UserM</result>
+            <result name="examfail">/admin/error.jsp</result>
+        </action>
+        <!-- 启用-->
+        <action name="able" class="userListAction" method="Enable">
+            <result name="enableu" type="chain">UserM</result>
+            <result name="disable">/admin/error.jsp</result>
+
+        </action>
+
+        <!-- 禁用-->
+        <action name="Prohi" class="userListAction" method="Prohibit">
+            <result name="Prohibitu" type="chain">UserM</result>
+            <result name="disprohi">/admin/error.jsp</result>
+
+        </action>
+
+    </package>
+
+
+    <package name="doc" namespace="/doc" extends="struts-default">
+
+        <!--        查询-->
+        <action name="docM" class="docListAction" method="findByDoc">
+            <result name="findtrue">/admin/DocAudit.jsp</result>
+            <result name="findfail">/admin/error.jsp</result>
+        </action>
+
+        <!--        审核通过-->
+        <action name="docExamPass" class="docListAction" method="ExamPass">
+            <result name="exampass" type="chain">docM</result>
+            <result name="disexam">/admin/error.jsp</result>
+        </action>
+
+        <!--        审核不通过-->
+        <action name="docExamFail" class="docListAction" method="ExamFail">
+            <result name="examfail" type="chain">docM</result>
+            <result name="failexam">/admin/error.jsp</result>
+        </action>
+
+    </package>
+
+    <!--=================================前=====台=========================================-->
+    <package name="docu" namespace="/docu" extends="struts-default,json-default">
+
+        <!-- 查询-->
+        <action name="docuM" class="docManagerAction" method="findDoc">
+            <result name="findpass">/reception/MyDoc.jsp</result>
+            <result name="findfail">/reception/error.jsp</result>
+
+        </action>
+
+        <!--  添加-->
+        <action name="adddoc" class="docUploadAction" method="DocUpload">
+            <result name="docpass" type="chain">docuM</result>
+            <result name="docfail">/reception/docUpload.jsp</result>
+
+            <interceptor-ref name="defaultStack">
+            <param name="fileUpload.maximumSize">10240000</param>
+            <param name="fileUpload.allowedTypes">
+                text/plain,image/jpeg,image/png,application/msword,application/vnd.ms-powerpoint
+                ,application/vnd.ms-excel,application/zip
+            </param>
+            <param name="fileUpload.allowedExtensions">.txt,.jpg,.png,.doc,.ppt,.xls,.zip</param>
+        </interceptor-ref>
+        </action>
+
+    </package>
+
+
+    <package name="userL" namespace="/userL" extends="struts-default,json-default">
+
+        <!--登录-->
+        <action name="ulogin" class="userLoginAction">
+            <result name="regson" type="json">
+                <param name="root">reusermap</param>
+            </result>
+        </action>
+
+        <!--注册-->
+        <action name="useradd" class="userLoginAction">
+            <result name="addppss">/reception/index.jsp</result>
+            <result name="addffail">/reception/error.jsp</result>
+        </action>
+    </package>
+
+
+    <!--    =======================================验证码==============================================-->
+    <package name="Security" namespace="/Security" extends="struts-default">
+        <action name="SecurityCodeImageAction"
+                class="com.soft.web.SecurityCodeImageAction">
+            <result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">imageStream</param>
+                <param name="bufferSize">2048</param>
+            </result>
+        </action>
+    </package>
+
+
+</struts>

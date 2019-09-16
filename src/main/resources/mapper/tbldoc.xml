@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soft.mapper.DocMapper">
+    <!--查询所有-->
+    <select id="findDocAll" parameterType="java.lang.Integer" resultMap="docMap">
+        select td.*,tu.username,tdt.dtname from tbldoc td,tbluser tu,tbldoctype tdt
+        where td.userno=tu.userno and td.dtno=tdt.dtno
+    </select>
+    <resultMap id="docMap" type="com.soft.entity.tbldoc">
+        <id property="docno" column="docno"></id>
+
+        <result property="userno" column="userno"></result>
+        <result property="docname" column="docname"></result>
+        <result property="docdetail" column="docdetail"></result>
+        <result property="docpath" column="docpath"></result>
+        <result property="dintegral" column="dintegral"></result>
+        <result property="docdate" column="docdate"></result>
+        <result property="downnum" column="downnum"></result>
+        <result property="dtno" column="dtno"></result>
+        <result property="exno" column="exno"></result>
+
+
+        <association property="user" column="userno" javaType="com.soft.entity.Users">
+            <id column="userno" property="userno"></id>
+            <!--字段-->
+            <result property="uname" column="uname"></result>
+            <result property="username" column="username"></result>
+            <result property="upwd" column="upwd"></result>
+            <result property="usex" column="usex"></result>
+            <result property="eduno" column="eduno"></result>
+            <result property="posno" column="posno"></result>
+            <result property="utel" column="utel"></result>
+            <result property="uemail" column="uemail"></result>
+            <result property="uresdate" column="uresdate"></result>
+            <result property="stno" column="stno"></result>
+            <result property="intecount" column="intecount"></result>
+        </association>
+
+        <association property="doctype" column="dtno" javaType="com.soft.entity.tbldoctype">
+            <id property="dtno" column="dtno"></id>
+            <result property="dtname" column="dtname"></result>
+        </association>
+
+        <association property="exam" column="exno" javaType="com.soft.entity.tblexamine">
+            <id property="exno" column="exno"></id>
+            <result property="exname" column="exname"></result>
+        </association>
+
+    </resultMap>
+
+
+    <!--增加-->
+    <insert id="addDoc" parameterType="com.soft.entity.tbldoc" useGeneratedKeys="true" keyColumn="docno">
+
+        insert into tbldoc(userno,docname,docdetail,docpath,dintegral,docdate,dtno)
+        values(#{userno},#{docname},#{docdetail},#{docpath},#{dintegral},#{docdate},#{dtno})
+    </insert>
+
+    <!--    删除-->
+    <delete id="delDoc" parameterType="com.soft.entity.tbldoc">
+
+    </delete>
+
+
+    <!--    修改-->
+    <update id="updateDocStatus" parameterType="java.lang.Integer">
+            Update tbldoc set exno=#{exno} where docno=#{docno}
+    </update>
+
+
+</mapper>

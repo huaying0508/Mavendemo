@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soft.mapper.UserListMapper">
+
+    <!--后台用户列表修改状态-->
+    <update id="updateStatus" parameterType="java.lang.Integer">
+        update tbluser set stno=#{stno} where userno=#{userno}
+    </update>
+
+
+    <!--后台添加前台用户-->
+    <insert id="addUser" parameterType="com.soft.entity.Users" useGeneratedKeys="true" keyColumn="userno">
+            insert into tbluser(uname,username,upwd,usex,eduno,posno,utel,uemail,uresdate,stno)
+            values(#{uname},#{username},#{upwd},#{usex},#{eduno},#{posno},#{utel},#{uemail},#{uresdate},1)
+    </insert>
+
+
+    <!-- 检测用户名-->
+    <select id="checkName" parameterType="java.lang.String" resultType="com.soft.entity.Users">
+        select * from tbluser where uname=#{uname}
+    </select>
+
+    <!--    登录-->
+    <select id="UserLogin" resultType="com.soft.entity.Users">
+        select * from tbluser where uname=#{uname} and upwd=#{upwd}
+    </select>
+
+
+    <!--  用户列表数据查询-->
+    <select id="findUserAll" parameterType="java.lang.Integer" resultMap="userMap">
+
+            select tu.*,tp.posname,te.eduname,ts.stname ,t.num,t.DownNum from tbluser tu,tblposition tp,tbleducation te,tblstate ts ,
+(select u.UserNO,(case when d.DownNum is null then 0 else d.DownNum end) as DownNum ,
+count(d.DownNum) as num from tbluser u LEFT JOIN tbldoc d on u.UserNO=d.UserNO GROUP BY u.UserNO,d.DownNum) t
+ where tu.posno=tp.posno and tu.eduno=te.eduno and tu.stno=ts.stno and tu.userno=t.userno
+
+    </select>
+    <resultMap id="userMap" type="com.soft.entity.Users">
+        <!--主键-->
+        <id column="userno" property="userno"></id>
+        <!--字段-->
+        <result property="uname" column="uname"></result>
+        <result property="username" column="username"></result>
+        <result property="upwd" column="upwd"></result>
+        <result property="usex" column="usex"></result>
+        <result property="eduno" column="eduno"></result>
+        <result property="posno" column="posno"></result>
+        <result property="utel" column="utel"></result>
+        <result property="uemail" column="uemail"></result>
+        <result property="uresdate" column="uresdate"></result>
+        <result property="stno" column="stno"></result>
+        <result property="intecont" column="intecont"></result>
+        <result property="num" column="num"></result>
+        <result property="downnum" column="downnum"></result>
+
+        <!--关联表之学历-->
+        <association property="edu" column="eduno" javaType="com.soft.entity.tbleducation">
+            <id property="eduno" column="eduno"></id>
+            <result property="eduname" column="eduname"></result>
+        </association>
+
+        <!--关联表之职业-->
+        <association property="pos" column="posno" javaType="com.soft.entity.tblposition">
+            <id property="posno" column="posno"></id>
+            <result property="posname" column="posname"></result>
+        </association>
+
+        <!--关联表之状态-->
+        <association property="status" column="stno" javaType="com.soft.entity.tblstate">
+            <id property="stno" column="stno"></id>
+            <result property="stname" column="stname"></result>
+        </association>
+
+    </resultMap>
+
+</mapper>
